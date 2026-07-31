@@ -57,7 +57,7 @@ Ask a question → LLM rewrites it → Hybrid search (TF-IDF + vector embeddings
 | Keyword search | TF-IDF (scikit-learn) | In-memory, fast for small datasets |
 | Hybrid fusion | Reciprocal Rank Fusion (RRF) | Combines keyword + vector rankings |
 | Re-ranker | cross-encoder/ms-marco-MiniLM-L-6-v2 | Improves precision on top results |
-| LLM | DeepSeek V4 Flash (OpenCode Go) | Fast, OpenAI-compatible, low cost |
+| LLM | DeepSeek V4 Flash (OpenCode Go) or GPT-4o-mini (OpenAI) | Swappable via one setting (`LLM_PROVIDER`) |
 | UI | Streamlit | Single framework for chat + dashboard |
 | Data store | In-memory (JSON + numpy) | No external database — just pip install (Docker optional) |
 
@@ -68,7 +68,8 @@ Ask a question → LLM rewrites it → Hybrid search (TF-IDF + vector embeddings
 ```bash
 # 1. Set up your API key
 cp .env.example .env
-# Edit .env and add your OPENCODE_API_KEY
+# Edit .env: choose LLM_PROVIDER=opencode (DeepSeek V4 Flash) or openai (GPT-4o-mini)
+# and add the matching key: OPENCODE_API_KEY or OPENAI_API_KEY
 
 # 2. Install dependencies
 pip install -r requirements.txt
@@ -184,7 +185,7 @@ these real logs, falling back to synthetic demo data when empty.
 | **Hybrid search (TF-IDF + vector + RRF) instead of one method** | TF-IDF matches exact terms, vector matches meaning; RRF combines both. Measured best MRR (0.90) in `eval.py` at ~60ms. |
 | **Cross-encoder reranking** | Scores each (query, chunk) pair together, so the best chunk ranks first. ~0.7s on only the top ~10 candidates. |
 | **sentence-transformers (MiniLM + ms-marco cross-encoder)** | Runs locally, no GPU, no API cost. 384-dim vectors are enough for this corpus. |
-| **DeepSeek V4 Flash via OpenCode Go** | OpenAI-compatible `chat/completions`, low cost, no extra SDK — just `requests`. |
+| **DeepSeek V4 Flash via OpenCode Go (or OpenAI GPT-4o-mini)** | OpenAI-compatible `chat/completions` in both cases. Pick the provider with `LLM_PROVIDER` in `.env` and add the matching key — no other code changes. |
 | **Streamlit for chat and dashboard** | One framework for UI and monitoring (allowed by the course); no front-end build step. |
 | **JSONL logs instead of PostgreSQL** | Postgres is needed for large-scale, multi-user logging; this single-user course app does not require it. JSONL files record conversations and feedback for the dashboard. |
 | **Plain Python ingestion script** | The dataset is small and changes rarely. No orchestration tool needed. |

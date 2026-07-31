@@ -12,10 +12,17 @@ BASE_DIR = Path(__file__).parent.resolve()
 DATA_DIR = BASE_DIR / "data"
 DATA_DIR.mkdir(exist_ok=True)
 
-# LLM (OpenCode Go — DeepSeek V4 Flash, OpenAI-compatible API)
-OPENCODE_API_KEY = os.getenv("OPENCODE_API_KEY", "")
-LLM_MODEL = os.getenv("LLM_MODEL", "deepseek-v4-flash")
-LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://opencode.ai/zen/go/v1")
+# LLM provider: "opencode" (OpenCode Go -> DeepSeek V4 Flash) or "openai" (GPT-4o-mini)
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "opencode")
+
+if LLM_PROVIDER == "openai":
+    LLM_API_KEY = os.getenv("OPENAI_API_KEY", "")
+    LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://api.openai.com/v1")
+    LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
+else:
+    LLM_API_KEY = os.getenv("OPENCODE_API_KEY", "")
+    LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://opencode.ai/zen/go/v1")
+    LLM_MODEL = os.getenv("LLM_MODEL", "deepseek-v4-flash")
 
 # Models
 EMBED_MODEL = os.getenv("EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")

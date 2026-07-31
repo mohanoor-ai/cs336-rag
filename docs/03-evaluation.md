@@ -126,7 +126,7 @@ for review.
 
 ```bash
 python eval.py        # retrieval: Hit Rate + MRR, no API key needed
-python eval_rag.py    # answers: LLM-as-a-Judge, needs OPENCODE_API_KEY
+python eval_rag.py    # answers: LLM-as-a-Judge, needs an API key
 make eval
 make eval-rag
 ```

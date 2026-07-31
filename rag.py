@@ -12,8 +12,8 @@ from time import sleep, time
 import requests
 from sentence_transformers import SentenceTransformer, CrossEncoder
 
-from config import (DATA_DIR, EMBED_MODEL, LLM_BASE_URL, LLM_MODEL,
-                    OPENCODE_API_KEY, RERANKER_MODEL, RERANK_TOP_K, TOP_K)
+from config import (DATA_DIR, EMBED_MODEL, LLM_API_KEY, LLM_BASE_URL,
+                    LLM_MODEL, RERANKER_MODEL, RERANK_TOP_K, TOP_K)
 from minsearch import Index
 
 PROMPT_TEMPLATE = """You are a CS336 TA. Answer the QUESTION using ONLY the CONTEXT.
@@ -82,10 +82,10 @@ def chat(messages, model=LLM_MODEL, temperature=0.3, max_tokens=800, max_retries
     max_retries handles rate limits (429): waits and retries with growing
     backoff. Set max_retries=1 to fail fast.
     """
-    if not OPENCODE_API_KEY:
+    if not LLM_API_KEY:
         return "[Error: No API key]", {}
     headers = {
-        "Authorization": f"Bearer {OPENCODE_API_KEY}",
+        "Authorization": f"Bearer {LLM_API_KEY}",
         "Content-Type": "application/json",
         "User-Agent": "opencode/1.0",
     }
@@ -118,7 +118,7 @@ def chat(messages, model=LLM_MODEL, temperature=0.3, max_tokens=800, max_retries
 
 def rewrite_query(query):
     """Expand the query with synonyms for better retrieval."""
-    if not OPENCODE_API_KEY:
+    if not LLM_API_KEY:
         return query
     try:
         rewritten, _ = chat(

@@ -89,10 +89,10 @@ I later added `eval_rag.py`, which scores final answers with an
 
 `rag.py` ties it together: optional query rewriting → hybrid search →
 rerank → build a prompt with citations → call the LLM → return the answer.
-I use **DeepSeek V4 Flash** through **OpenCode Go**, an OpenAI-compatible
-endpoint that is fast, reliable, and low cost. The LLM call is a simple
-`POST /chat/completions` with the API key from `.env`, so no extra SDK is
-needed.
+The LLM call is a simple OpenAI-compatible `POST /chat/completions`, so
+the provider is swappable: `LLM_PROVIDER=opencode` uses **DeepSeek V4 Flash**
+via **OpenCode Go**, and `LLM_PROVIDER=openai` uses **GPT-4o-mini**. Only
+the key in `.env` needs to change — no code changes.
 
 ### 7. Interface and monitoring (modules 5 and 7)
 

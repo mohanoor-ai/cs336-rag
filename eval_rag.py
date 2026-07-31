@@ -3,7 +3,8 @@ RAG evaluation with LLM-as-a-Judge.
 Runs the RAG pipeline on the ground truth questions and classifies
 each answer as RELEVANT / PARTLY_RELEVANT / NON_RELEVANT.
 
-Needs an OPENCODE_API_KEY. Saves results to results/rag-eval.csv.
+Needs an API key (OPENCODE_API_KEY for OpenCode Go, or OPENAI_API_KEY for
+OpenAI). Saves results to results/rag-eval.csv.
 """
 
 import csv

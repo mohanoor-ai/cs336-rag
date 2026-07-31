@@ -57,7 +57,9 @@ context does not contain the answer.
 
 ```bash
 # 1. set up the API key
-cp .env.example .env            # then add OPENCODE_API_KEY to .env
+cp .env.example .env            # choose a provider and add its key
+#   LLM_PROVIDER=opencode  -> set OPENCODE_API_KEY (DeepSeek V4 Flash)
+#   LLM_PROVIDER=openai    -> set OPENAI_API_KEY (GPT-4o-mini)
 
 # 2. install
 pip install -r requirements.txt
@@ -99,7 +101,9 @@ jupyter notebook notebooks/cs336-rag-test.ipynb
 
 - **`Index ready` takes a while the first time** — the sentence-transformers
   and cross-encoder models download on first use, then stay cached.
-- **`[Error: No API key]`** — `OPENCODE_API_KEY` is not set in `.env`.
+- **`[Error: No API key]`** — the key for your chosen provider is missing
+  in `.env` (`OPENCODE_API_KEY` for `LLM_PROVIDER=opencode`,
+  `OPENAI_API_KEY` for `LLM_PROVIDER=openai`).
 - **`429 Too Many Requests`** — you hit a rate limit; the code retries
   automatically with backoff, so the request usually goes through.
 - **`Run ingest.py first`** — `data/documents.json` is missing; run
@@ -115,14 +119,17 @@ jupyter notebook notebooks/cs336-rag-test.ipynb
 - **Better evaluation:** make the ground truth chunk-level (exact chunk ids)
   instead of video/file level; add a second model to `eval_rag.py` and
   compare.
-- **Different LLM:** change `LLM_MODEL` in `config.py` (or via `.env`).
+- **Different LLM:** set `LLM_PROVIDER` in `.env` to `opencode` (DeepSeek V4
+  Flash) or `openai` (GPT-4o-mini) and add the matching key; or override
+  `LLM_MODEL`.
 - **Real monitoring:** point the dashboard at a database instead of JSONL
   files, and add alerting.
 
 ## Reproducibility notes
 
 - All dependency versions are pinned in `requirements.txt`.
-- `.env.example` documents the one required variable (`OPENCODE_API_KEY`).
+- `.env.example` documents the required variable for each provider
+  (`OPENCODE_API_KEY` or `OPENAI_API_KEY`, selected by `LLM_PROVIDER`).
 - `ingest.py` rebuilds the dataset from public sources, so `data/` does not
   need to be committed.
 - The evaluation numbers in `README.md` and `docs/03-evaluation.md` were
