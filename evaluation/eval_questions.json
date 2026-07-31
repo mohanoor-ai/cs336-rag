@@ -1,0 +1,79 @@
+[
+  {
+    "question": "What is the goal of CS336: Language Modeling from Scratch?",
+    "ground_truth": "The course walks students through every aspect of language model creation, including data collection, tokenization, transformer model construction, training, scaling, and evaluation before deployment.",
+    "expected_sources": [
+      {"type": "transcript", "video_id": "JuoVZkPBiKk"}
+    ]
+  },
+  {
+    "question": "How does byte pair encoding (BPE) tokenization work?",
+    "ground_truth": "BPE starts with each byte as a token and iteratively merges the most frequent adjacent pair of tokens, creating new tokens that represent common subword units.",
+    "expected_sources": [
+      {"type": "transcript", "video_id": "JuoVZkPBiKk"},
+      {"type": "code", "file_path": "tests/test_tokenizer.py"}
+    ]
+  },
+  {
+    "question": "What are the five assignments in CS336 and what do they cover?",
+    "ground_truth": "Assignment 1 covers basics (tokenizer, architecture, optimizer, trainer). Assignment 2 covers systems (kernels, parallelism). Assignment 3 covers scaling laws. Assignment 4 covers data processing. Assignment 5 covers alignment.",
+    "expected_sources": [
+      {"type": "transcript", "video_id": "JuoVZkPBiKk"}
+    ]
+  },
+  {
+    "question": "Why is tokenization important for language models?",
+    "ground_truth": "Tokenization converts raw text into tokens that the model can process, balancing vocabulary size against sequence length since attention is quadratic in sequence length.",
+    "expected_sources": [
+      {"type": "transcript", "video_id": "JuoVZkPBiKk"},
+      {"type": "code", "file_path": "tests/test_tokenizer.py"}
+    ]
+  },
+  {
+    "question": "What is the difference between pre-training and post-training?",
+    "ground_truth": "Pre-training learns general representations from large unlabeled data. Post-training (alignment) uses supervised fine-tuning or reinforcement learning to improve the model for specific tasks.",
+    "expected_sources": [
+      {"type": "transcript", "video_id": "JuoVZkPBiKk"},
+      {"type": "transcript", "video_id": "izZba4UA7iY"}
+    ]
+  },
+  {
+    "question": "What scaling law does the course reference and what does it predict?",
+    "ground_truth": "The Chinchilla scaling law predicts optimal model size and data size for a given compute budget. A 70B model should be trained on roughly 1.4 trillion tokens.",
+    "expected_sources": [
+      {"type": "transcript", "video_id": "JuoVZkPBiKk"},
+      {"type": "transcript", "video_id": "lVynu4bo1rY"}
+    ]
+  },
+  {
+    "question": "What are the main components of a transformer language model?",
+    "ground_truth": "A transformer language model consists of tokenization, embedding layers, attention mechanisms, feed-forward layers, normalization, and a language modeling head that predicts next tokens.",
+    "expected_sources": [
+      {"type": "transcript", "video_id": "izZba4UA7iY"},
+      {"type": "code", "file_path": "tests/test_model.py"}
+    ]
+  },
+  {
+    "question": "Why does the course emphasize building models from scratch instead of prompting existing ones?",
+    "ground_truth": "Building from scratch gives deeper understanding of how models work, enables fundamental research beyond just prompting, and develops engineering skills that transfer to large-scale systems.",
+    "expected_sources": [
+      {"type": "transcript", "video_id": "JuoVZkPBiKk"}
+    ]
+  },
+  {
+    "question": "What is the FLOPs formula for training a transformer and where does it come from?",
+    "ground_truth": "The approximate FLOPs for training a transformer is 6 times the number of parameters times the number of tokens (6ND), accounting for forward and backward passes.",
+    "expected_sources": [
+      {"type": "transcript", "video_id": "JuoVZkPBiKk"},
+      {"type": "transcript", "video_id": "lVynu4bo1rY"},
+      {"type": "code", "file_path": "tests/test_model.py"}
+    ]
+  },
+  {
+    "question": "What role does data quality play in language model performance according to the lecture?",
+    "ground_truth": "Data quality is a key factor in model performance. Low-quality data wastes compute, so filtering, deduplication, and careful data mixing are essential for efficient training.",
+    "expected_sources": [
+      {"type": "transcript", "video_id": "JuoVZkPBiKk"}
+    ]
+  }
+]

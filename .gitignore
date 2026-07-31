@@ -1,0 +1,8 @@
+.env
+data/documents.json
+data/feedback.jsonl
+data/conversations.jsonl
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/

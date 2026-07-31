@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      - OPENCODE_API_KEY=${OPENCODE_API_KEY}
+    volumes:
+      - ./data:/app/data
+
+  dashboard:
+    build: .
+    command: ["streamlit", "run", "dashboard.py", "--server.port=8502", "--server.address=0.0.0.0"]
+    ports:
+      - "8502:8502"
+    volumes:
+      - ./data:/app/data
