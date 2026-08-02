@@ -1,6 +1,5 @@
 # CS336-RAG
 
-**Mohammed Sheikh-Noor**
 **Course: DataTalks LLM Zoomcamp 2026**
 
 A RAG application that answers questions about Stanford's CS336 course
