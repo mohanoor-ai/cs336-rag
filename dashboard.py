@@ -163,7 +163,7 @@ st.dataframe(pd.DataFrame({
     "Strategy": ["TF-IDF", "Vector", "Hybrid", "Hybrid + Rerank"],
     "Hit Rate": [1.00, 0.90, 0.90, 0.90],
     "MRR": [0.80, 0.90, 0.90, 0.90],
-    "Latency (s)": [0.02, 0.03, 0.05, 0.78],
+    "Latency (s)": [0.02, 0.02, 0.04, 0.39],
 }), use_container_width=True)
 
 st.markdown("---")

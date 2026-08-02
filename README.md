@@ -97,17 +97,18 @@ questions (evaluation/eval_questions.json):
 | Strategy | Hit Rate | MRR | Latency |
 |----------|----------|-----|---------|
 | BM25 (TF-IDF) | 1.00 | 0.80 | 0.02s |
-| Vector (semantic) | 0.90 | 0.90 | 0.03s |
-| **Hybrid (TF-IDF + Vector)** | **0.90** | **0.90** | **0.05s** |
-| Hybrid + Rerank | 0.90 | 0.90 | 0.78s |
+| Vector (semantic) | 0.90 | 0.90 | 0.02s |
+| **Hybrid (TF-IDF + Vector)** | **0.90** | **0.90** | **0.04s** |
+| Hybrid + Rerank | 0.90 | 0.90 | 0.39s |
 
 **Hybrid search wins**: it matches the vector strategy's MRR while staying
 keyword-aware (the BM25 route found relevant chunks for every question).
-Reranking trades ~15x latency for cleaner top results. Answer quality is
+Reranking trades ~10x latency for cleaner top results. Answer quality is
 scored separately with LLM-as-a-Judge via `python eval_rag.py`
 (RELEVANT / PARTLY_RELEVANT / NON_RELEVANT): the latest run scored
-**7/10 RELEVANT**, 3 PARTLY_RELEVANT, 0 NON_RELEVANT — results vary
-slightly run-to-run since the judge is an LLM (results/rag-eval.csv).
+**6/10 RELEVANT**, 2 PARTLY_RELEVANT, 2 NON_RELEVANT. Results vary run to
+run since both the answers and the judge are LLMs — observed range across
+three runs is 6-8 RELEVANT, 1-3 PARTLY, 0-2 NON (results/rag-eval.csv).
 
 A 12-question random test ran through the full pipeline: every question
 returned 5 cited sources, and answers either cite the context or say the
@@ -155,8 +156,8 @@ these real logs, falling back to synthetic demo data when empty.
 | Choice | Reason |
 |--------|--------|
 | **In-memory search (`minsearch`) instead of a vector database** | 3,740 chunks fit in memory; search is cosine similarity over numpy matrices. A vector database is needed for larger datasets, not here. |
-| **Hybrid search (TF-IDF + vector + RRF) instead of one method** | TF-IDF matches exact terms, vector matches meaning; RRF combines both. Measured best MRR (0.90) in `eval.py` at ~60ms. |
-| **Cross-encoder reranking** | Scores each (query, chunk) pair together, so the best chunk ranks first. ~0.7s on only the top ~10 candidates. |
+| **Hybrid search (TF-IDF + vector + RRF) instead of one method** | TF-IDF matches exact terms, vector matches meaning; RRF combines both. Measured best MRR (0.90) in `eval.py` at ~40ms. |
+| **Cross-encoder reranking** | Scores each (query, chunk) pair together, so the best chunk ranks first. ~0.4s on only the top ~10 candidates. |
 | **sentence-transformers (MiniLM + ms-marco cross-encoder)** | Runs locally, no GPU, no API cost. 384-dim vectors are enough for this corpus. |
 | **DeepSeek V4 Flash via OpenCode Go (or OpenAI GPT-4o-mini)** | OpenAI-compatible `chat/completions` in both cases. Pick the provider with `LLM_PROVIDER` in `.env` and add the matching key — no other code changes. |
 | **Streamlit for chat and dashboard** | One framework for UI and monitoring (allowed by the course); no front-end build step. |
