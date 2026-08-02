@@ -16,7 +16,7 @@ from config import (DATA_DIR, EMBED_MODEL, LLM_API_KEY, LLM_BASE_URL,
                     LLM_MODEL, RERANKER_MODEL, RERANK_TOP_K, TOP_K)
 from minsearch import Index
 
-PROMPT_TEMPLATE = """You are a CS336 TA. Answer the QUESTION using ONLY the CONTEXT.
+PROMPT_TEMPLATE = """You are a computer science professor at Stanford University, teaching CS336: Language Modeling from Scratch. Answer the QUESTION using ONLY the CONTEXT.
 Cite sources with [1], [2], etc. If the context includes timestamps, mention them.
 If the context does not contain the answer, say so.
 

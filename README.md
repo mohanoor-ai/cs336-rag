@@ -8,30 +8,27 @@ A RAG application that answers questions about Stanford's CS336 course
 from the course GitHub repo using an in-memory search index — no external
 database required.
 
-## Documentation
-
-| Doc | Contents |
-|-----|----------|
-| [01 — Project story](docs/01-project-story.md) | How the project was created, what it does and achieves |
-| [02 — How it works](docs/02-how-it-works.md) | The pipeline stage by stage (ingest → index → search → rerank → generate → monitor) |
-| [03 — Evaluation](docs/03-evaluation.md) | Test criteria, what we test, metrics, results |
-| [04 — Student guide](docs/04-student-guide.md) | Repo map, key ideas, how to run, troubleshooting |
-| [05 — Testing strategy](docs/05-testing-strategy.md) | What we test, how, and the results |
-
----
-
 ## Problem
 
-Stanford CS336 has 19 lectures on YouTube and code on GitHub. Finding
-specific topics means scrubbing through long videos or reading a lot
-of code. This app lets you ask questions in natural language and get
-answers with citations to the exact video timestamp or file.
+Stanford CS336 has 19 lectures on YouTube and a lot of code on GitHub.
+Finding a specific topic means scrubbing through hours of video or reading
+hundreds of files. This app lets you ask questions in natural language and
+get answers with citations to the exact video timestamp or file.
 
 **Course:** [Stanford CS336](https://cs336.stanford.edu/) (Spring 2026)
 **Playlist:** https://www.youtube.com/watch?v=JuoVZkPBiKk&list=PLoROMvodv4rMqXOcazWaTUHhq-yembLCV
 **GitHub:** https://github.com/stanford-cs336/lectures
 
----
+## Features
+
+- **Natural-language questions** about CS336 lectures and code
+- **Cited answers** — links to the exact YouTube timestamp or GitHub file
+- **Hybrid search** (TF-IDF + embeddings, fused with RRF)
+- **Cross-encoder reranking** for more relevant top results
+- **Query rewriting** with synonyms for better retrieval
+- **Streamlit chat UI** with rewrite/rerank toggles and top-k control
+- **Monitoring dashboard** — 8 charts fed by real usage logs
+- **Evaluation** — Hit Rate/MRR for retrieval, LLM-as-a-Judge for answers
 
 ## Dataset
 
@@ -42,26 +39,9 @@ answers with citations to the exact video timestamp or file.
 
 **Total: 3,740 chunks**
 
----
-
 ## How it works
 
-Ask a question → LLM rewrites it → Hybrid search (TF-IDF + vector embeddings → RRF fusion) → Cross-encoder reranking → LLM generates cited answer
-
-### Tech Stack
-
-| Component | Technology | Why |
-|-----------|-----------|-----|
-| Embeddings | sentence-transformers/all-MiniLM-L6-v2 | 384-dim vectors, runs locally, no API cost |
-| Vector search | scikit-learn cosine similarity | Simple, no external service needed |
-| Keyword search | TF-IDF (scikit-learn) | In-memory, fast for small datasets |
-| Hybrid fusion | Reciprocal Rank Fusion (RRF) | Combines keyword + vector rankings |
-| Re-ranker | cross-encoder/ms-marco-MiniLM-L-6-v2 | Improves precision on top results |
-| LLM | DeepSeek V4 Flash (OpenCode Go) or GPT-4o-mini (OpenAI) | Swappable via one setting (`LLM_PROVIDER`) |
-| UI | Streamlit | Single framework for chat + dashboard |
-| Data store | In-memory (JSON + numpy) | No external database — just pip install (Docker optional) |
-
----
+Ask a question → LLM rewrites it → Hybrid search (TF-IDF + vector embeddings → RRF fusion) → Cross-encoder reranking → LLM (prompted as a Stanford CS336 professor) generates a cited answer.
 
 ## Quickstart
 
@@ -87,8 +67,6 @@ streamlit run dashboard.py
 docker compose up -d
 ```
 
----
-
 ## Testing
 
 ```bash
@@ -111,11 +89,6 @@ python scripts/random_test.py
 jupyter notebook notebooks/cs336-rag-test.ipynb
 ```
 
-See [docs/05-testing-strategy.md](docs/05-testing-strategy.md) for the full
-testing strategy and the recorded results.
-
----
-
 ## Evaluation Results
 
 Retrieval quality measured with **Hit Rate** and **MRR** on 10 ground-truth
@@ -132,10 +105,14 @@ questions (evaluation/eval_questions.json):
 keyword-aware (the BM25 route found relevant chunks for every question).
 Reranking trades ~15x latency for cleaner top results. Answer quality is
 scored separately with LLM-as-a-Judge via `python eval_rag.py`
-(RELEVANT / PARTLY_RELEVANT / NON_RELEVANT): **8/10 answers were RELEVANT**,
-1 PARTLY_RELEVANT, 1 NON_RELEVANT (results/rag-eval.csv).
+(RELEVANT / PARTLY_RELEVANT / NON_RELEVANT): the latest run scored
+**7/10 RELEVANT**, 3 PARTLY_RELEVANT, 0 NON_RELEVANT — results vary
+slightly run-to-run since the judge is an LLM (results/rag-eval.csv).
 
----
+A 12-question random test ran through the full pipeline: every question
+returned 5 cited sources, and answers either cite the context or say the
+context does not contain the answer (no hallucination). Full answers in
+`results/random-questions.jsonl`.
 
 ## Project Structure
 
@@ -162,8 +139,6 @@ cs336-rag/
 └── .gitignore
 ```
 
----
-
 ## Monitoring
 
 Dashboard at `streamlit run dashboard.py` — 8 charts tracking query
@@ -174,8 +149,6 @@ and thumbs feedback to `data/feedback.jsonl`; the dashboard reads
 these real logs, falling back to synthetic demo data when empty.
 
 ![Dashboard](images/dashboard1.jpg)
-
----
 
 ## Stack choices and reasons
 
@@ -191,4 +164,19 @@ these real logs, falling back to synthetic demo data when empty.
 | **Plain Python ingestion script** | The dataset is small and changes rarely. No orchestration tool needed. |
 | **Docker (optional)** | Provided for portability; the app also runs with plain `pip install` — Docker not required. |
 
-Evaluation criteria are documented in [docs/03-evaluation.md](docs/03-evaluation.md).
+## Evaluation criteria
+
+| Requirement | Where |
+|-------------|-------|
+| Problem description | README |
+| Retrieval flow | rag.py / ask.py — in-memory index + LLM |
+| Retrieval evaluation | eval.py — 4 strategies, Hit Rate + MRR |
+| LLM evaluation | eval_rag.py — LLM-as-a-Judge (RELEVANT/PARTLY/NON) |
+| Interface | app.py (UI) + ask.py/search.py (CLI) |
+| Ingestion | ingest.py |
+| Monitoring | dashboard.py — 8 charts + real feedback |
+| Containerization | Dockerfile + docker-compose.yaml |
+| Reproducibility | Pinned deps, .env.example, setup instructions |
+| Hybrid search | minsearch.py — TF-IDF + vector via RRF |
+| Re-ranking | Cross-encoder in rag.py |
+| Query rewriting | LLM expansion in rag.py |

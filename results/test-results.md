@@ -5,7 +5,7 @@
 **Embedding Model:** sentence-transformers/all-MiniLM-L6-v2
 **Reranker:** cross-encoder/ms-marco-MiniLM-L-6-v2
 **LLM:** DeepSeek V4 Flash via OpenCode Go (`https://opencode.ai/zen/go/v1`)
-**Test strategy:** see `docs/05-testing-strategy.md`
+**Test strategy:** see the Testing and Evaluation sections of the README
 
 ## 1. Ingestion
 
@@ -41,11 +41,13 @@ LLM-as-a-Judge on the same 10 questions:
 
 | Relevance | Count | Share |
 |-----------|-------|-------|
-| RELEVANT | 8 | 80% |
-| PARTLY_RELEVANT | 1 | 10% |
-| NON_RELEVANT | 1 | 10% |
+| RELEVANT | 7 | 70% |
+| PARTLY_RELEVANT | 3 | 30% |
+| NON_RELEVANT | 0 | 0% |
 
-PASS — 8/10 fully relevant. Full rows in `results/rag-eval.csv`.
+PASS — majority fully relevant; results vary slightly run-to-run since the
+judge is an LLM (an earlier run gave 8/1/1). Full rows in
+`results/rag-eval.csv`.
 
 ## 5. Random questions (`python scripts/random_test.py`)
 
@@ -101,5 +103,5 @@ PASS — open it with `jupyter notebook notebooks/cs336-rag-test.ipynb`.
 
 All 6 test levels passed: ingestion, retrieval (measured + manual), answer
 quality (judge + random questions), interfaces, and notebook. The app is
-grounded (80% RELEVANT, honest refusals), fast (~60ms search), and runnable
-by a reviewer.
+grounded (majority RELEVANT, honest refusals), fast (~60ms search), and
+runnable by a reviewer.
