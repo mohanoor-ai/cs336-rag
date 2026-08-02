@@ -164,19 +164,3 @@ these real logs, falling back to synthetic demo data when empty.
 | **Plain Python ingestion script** | The dataset is small and changes rarely. No orchestration tool needed. |
 | **Docker (optional)** | Provided for portability; the app also runs with plain `pip install` — Docker not required. |
 
-## Evaluation criteria
-
-| Requirement | Where |
-|-------------|-------|
-| Problem description | README |
-| Retrieval flow | rag.py / ask.py — in-memory index + LLM |
-| Retrieval evaluation | eval.py — 4 strategies, Hit Rate + MRR |
-| LLM evaluation | eval_rag.py — LLM-as-a-Judge (RELEVANT/PARTLY/NON) |
-| Interface | app.py (UI) + ask.py/search.py (CLI) |
-| Ingestion | ingest.py |
-| Monitoring | dashboard.py — 8 charts + real feedback |
-| Containerization | Dockerfile + docker-compose.yaml |
-| Reproducibility | Pinned deps, .env.example, setup instructions |
-| Hybrid search | minsearch.py — TF-IDF + vector via RRF |
-| Re-ranking | Cross-encoder in rag.py |
-| Query rewriting | LLM expansion in rag.py |
